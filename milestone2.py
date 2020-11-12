@@ -96,6 +96,49 @@ def TrajectoryGenerator(Tse_i,Tsc_i,Tsc_f,Tce_g,Tce_s,k):
         myoutput = " %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f\n" % (seg5[k*i][0][0],seg5[k*i][0][1],seg5[k*i][0][2],seg5[k*i][1][0],seg5[k*i][1][1],seg5[k*i][1][2],seg5[k*i][2][0],seg5[k*i][2][1],seg5[k*i][2][2],seg5[k*i][0][3],seg5[k*i][1][3],seg5[k*i][2][3],1)
         f.write(myoutput)
 
+    '''
+    Trajectory Segment 6
+    Move to Placing configuration
+    '''
+    #end effector configuration for placing
+    Tse_p = np.dot(Tsc_f,Tce_g)
+
+    #trajectory parameters
+    Tf = 2
+    N = (Tf*k)/0.01
+    
+    #calculate trajectory
+    seg6 = ScrewTrajectory(Tse_sf,Tse_p,Tf,N,3)
+
+    #write to csv file
+    for i in range(int(np.shape(seg6)[0]/k)):
+        myoutput = " %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f\n" % (seg6[k*i][0][0],seg6[k*i][0][1],seg6[k*i][0][2],seg6[k*i][1][0],seg6[k*i][1][1],seg6[k*i][1][2],seg6[k*i][2][0],seg6[k*i][2][1],seg6[k*i][2][2],seg6[k*i][0][3],seg6[k*i][1][3],seg6[k*i][2][3],1)
+        f.write(myoutput)
+
+    '''
+    Trajectory Segment 7
+    Place Cube
+    '''
+    #write to csv file
+    for i in range(63):
+        myoutput = " %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f\n" % (seg6[-1][0][0],seg6[-1][0][1],seg6[-1][0][2],seg6[-1][1][0],seg6[-1][1][1],seg6[-1][1][2],seg6[-1][2][0],seg6[-1][2][1],seg6[-1][2][2],seg6[-1][0][3],seg6[-1][1][3],seg6[-1][2][3],0)
+        f.write(myoutput)
+
+    '''
+    Trajectory Segment 8
+    Return to Standoff configuration
+    '''
+    #calculate trajectory
+    seg8 = ScrewTrajectory(Tse_p,Tse_sf,Tf,N,3)
+
+    #write to csv file
+    for i in range(int(np.shape(seg8)[0]/k)):
+        myoutput = " %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f\n" % (seg8[k*i][0][0],seg8[k*i][0][1],seg8[k*i][0][2],seg8[k*i][1][0],seg8[k*i][1][1],seg8[k*i][1][2],seg8[k*i][2][0],seg8[k*i][2][1],seg8[k*i][2][2],seg8[k*i][0][3],seg8[k*i][1][3],seg8[k*i][2][3],0)
+        f.write(myoutput)
+
+
+
+
 #End effector initial configuration
 Tse_i = np.array([[0,0,1,0],[0,1,0,0],[-1,0,0,0.5],[0,0,0,1]])
 
