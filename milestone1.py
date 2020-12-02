@@ -21,8 +21,8 @@ def NextState(thetalist,dthetalist,dt,dthetamax):
     r = 0.0475
     l = 0.47/2
     w = 0.3/2
-    Tsb = np.array([[np.cos(thetalist[2]),-np.sin(thetalist[2]),0,thetalist[0]],
-                [np.sin(thetalist[2]),np.cos(thetalist[2]),0,thetalist[1]],
+    Tsb = np.array([[np.cos(thetalist[0]),-np.sin(thetalist[0]),0,thetalist[1]],
+                [np.sin(thetalist[0]),np.cos(thetalist[0]),0,thetalist[2]],
                 [0,0,1,0.0963],
                 [0,0,0,1]])
     
@@ -38,7 +38,7 @@ def NextState(thetalist,dthetalist,dt,dthetamax):
             dthetalist[i] = -dthetamax
 
     # Calculate change in wheel angle            
-    dthetalist_wheel = dthetalist[:4]
+    dthetalist_wheel = dthetalist[5:]
     dth = dt*dthetalist_wheel
 
     # Calculate twist
@@ -63,20 +63,25 @@ def NextState(thetalist,dthetalist,dt,dthetamax):
     thetalist_new,dthetalist_new = EulerStep(thetalist9, dthetalist, ddthetalist, dt)
     
     # Combine calculations
-    thetalist_f = np.append(np.array([xb,yb,phi]),thetalist_new)
+    thetalist_f = np.append(np.array([phi,xb,yb]),thetalist_new)
     thetalist_f = np.append(thetalist_f,grip)
+
+    # Write to csv
+    myoutput = " %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f\n" % (thetalist_f[0],thetalist_f[1],thetalist_f[2],thetalist_f[3],thetalist_f[4],thetalist_f[5],thetalist_f[6],thetalist_f[7],thetalist_f[8],thetalist_f[9],thetalist_f[10],thetalist_f[11],thetalist_f[12])
+    f.write(myoutput)
 
     return thetalist_f
 
 
 
 #Inputs
-dthetalist = np.array([10,10,10,10,1,1,1,1,1])
+dthetalist = np.array([1,1,1,1,1,5,5,5,5])  #joint velocities then wheel velocities
 dt = 0.01
 dthetamax = 12
-thetalist = np.array([0,-0.526,0,0,-0.785,0.785,-1.571,0,0,0,0,0,0])
+thetalist = np.array([0,0,0,0,0,0,0,0,0,0,0,0,0])
 
-test = NextState(thetalist,dthetalist,dt,dthetamax)
-print(thetalist)
-print(test)
+# Open csv
+f = open('step.csv','w')
 
+for i in range(100):
+    thetalist = NextState(thetalist,dthetalist,dt,dthetamax)
