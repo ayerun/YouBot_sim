@@ -17,6 +17,9 @@ def NextState(thetalist,dthetalist,dt,dthetamax):
     Use forward dynamics to get joint accelerations
     Use Euler step to get thlist_f
     '''
+    #Reverse dthetalist
+    dthetalist = np.array([dthetalist[4],dthetalist[5],dthetalist[6],dthetalist[7],dthetalist[8],dthetalist[0],dthetalist[1],dthetalist[2],dthetalist[3]])
+
     # Constants
     r = 0.0475
     l = 0.47/2
@@ -103,12 +106,6 @@ def TrajectoryGenerator(Tse_i,Tsc_i,Tsc_f,Tce_g,Tce_s,k):
     #calculate trajectory
     seg1 = ScrewTrajectory(Tse_i,Tse_si,Tf1,N1,3)
 
-    #write to csv file
-    f = open('seg.csv','w')
-    for i in range(int(np.shape(seg1)[0]/k)):
-        myoutput = " %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f\n" % (seg1[k*i][0][0],seg1[k*i][0][1],seg1[k*i][0][2],seg1[k*i][1][0],seg1[k*i][1][1],seg1[k*i][1][2],seg1[k*i][2][0],seg1[k*i][2][1],seg1[k*i][2][2],seg1[k*i][0][3],seg1[k*i][1][3],seg1[k*i][2][3],0)
-        f.write(myoutput)
-
     '''
     Trajectory Segment 2
     Move to Grasping configuration
@@ -123,31 +120,12 @@ def TrajectoryGenerator(Tse_i,Tsc_i,Tsc_f,Tce_g,Tce_s,k):
     #calculate trajectory
     seg2 = ScrewTrajectory(Tse_si,Tse_g,Tf2,N2,3)
 
-    #write to csv file
-    for i in range(int(np.shape(seg2)[0]/k)):
-        myoutput = " %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f\n" % (seg2[k*i][0][0],seg2[k*i][0][1],seg2[k*i][0][2],seg2[k*i][1][0],seg2[k*i][1][1],seg2[k*i][1][2],seg2[k*i][2][0],seg2[k*i][2][1],seg2[k*i][2][2],seg2[k*i][0][3],seg2[k*i][1][3],seg2[k*i][2][3],0)
-        f.write(myoutput)
-
-    '''
-    Trajectory Segment 3
-    Grasp Cube
-    '''
-    #write to csv file
-    for i in range(63):
-        myoutput = " %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f\n" % (seg2[-1][0][0],seg2[-1][0][1],seg2[-1][0][2],seg2[-1][1][0],seg2[-1][1][1],seg2[-1][1][2],seg2[-1][2][0],seg2[-1][2][1],seg2[-1][2][2],seg2[-1][0][3],seg2[-1][1][3],seg2[-1][2][3],1)
-        f.write(myoutput)
-
     '''
     Trajectory Segment 4
     Return to Standoff Position 1
     '''
     #calculate trajectory
     seg4 = ScrewTrajectory(Tse_g,Tse_si,Tf2,N2,3)
-
-    #write to csv file
-    for i in range(int(np.shape(seg4)[0]/k)):
-        myoutput = " %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f\n" % (seg4[k*i][0][0],seg4[k*i][0][1],seg4[k*i][0][2],seg4[k*i][1][0],seg4[k*i][1][1],seg4[k*i][1][2],seg4[k*i][2][0],seg4[k*i][2][1],seg4[k*i][2][2],seg4[k*i][0][3],seg4[k*i][1][3],seg4[k*i][2][3],1)
-        f.write(myoutput)
 
     '''
     Trajectory Segment 5
@@ -159,11 +137,6 @@ def TrajectoryGenerator(Tse_i,Tsc_i,Tsc_f,Tce_g,Tce_s,k):
     #calculate trajectory
     seg5 = ScrewTrajectory(Tse_si,Tse_sf,Tf1,N1,3)
 
-    #write to csv file
-    for i in range(int(np.shape(seg5)[0]/k)):
-        myoutput = " %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f\n" % (seg5[k*i][0][0],seg5[k*i][0][1],seg5[k*i][0][2],seg5[k*i][1][0],seg5[k*i][1][1],seg5[k*i][1][2],seg5[k*i][2][0],seg5[k*i][2][1],seg5[k*i][2][2],seg5[k*i][0][3],seg5[k*i][1][3],seg5[k*i][2][3],1)
-        f.write(myoutput)
-
     '''
     Trajectory Segment 6
     Move to Placing configuration
@@ -174,31 +147,12 @@ def TrajectoryGenerator(Tse_i,Tsc_i,Tsc_f,Tce_g,Tce_s,k):
     #calculate trajectory
     seg6 = ScrewTrajectory(Tse_sf,Tse_p,Tf2,N2,3)
 
-    #write to csv file
-    for i in range(int(np.shape(seg6)[0]/k)):
-        myoutput = " %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f\n" % (seg6[k*i][0][0],seg6[k*i][0][1],seg6[k*i][0][2],seg6[k*i][1][0],seg6[k*i][1][1],seg6[k*i][1][2],seg6[k*i][2][0],seg6[k*i][2][1],seg6[k*i][2][2],seg6[k*i][0][3],seg6[k*i][1][3],seg6[k*i][2][3],1)
-        f.write(myoutput)
-
-    '''
-    Trajectory Segment 7
-    Place Cube
-    '''
-    #write to csv file
-    for i in range(63):
-        myoutput = " %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f\n" % (seg6[-1][0][0],seg6[-1][0][1],seg6[-1][0][2],seg6[-1][1][0],seg6[-1][1][1],seg6[-1][1][2],seg6[-1][2][0],seg6[-1][2][1],seg6[-1][2][2],seg6[-1][0][3],seg6[-1][1][3],seg6[-1][2][3],0)
-        f.write(myoutput)
-
     '''
     Trajectory Segment 8
     Return to Standoff configuration
     '''
     #calculate trajectory
     seg8 = ScrewTrajectory(Tse_p,Tse_sf,Tf2,N2,3)
-
-    #write to csv file
-    for i in range(int(np.shape(seg8)[0]/k)):
-        myoutput = " %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f\n" % (seg8[k*i][0][0],seg8[k*i][0][1],seg8[k*i][0][2],seg8[k*i][1][0],seg8[k*i][1][1],seg8[k*i][1][2],seg8[k*i][2][0],seg8[k*i][2][1],seg8[k*i][2][2],seg8[k*i][0][3],seg8[k*i][1][3],seg8[k*i][2][3],0)
-        f.write(myoutput)
     
     '''
     Output Trajectory
@@ -356,6 +310,7 @@ def Get_Jacobians(config):
     Args:
         config: [phi,x,y,theta1,theta2,theta3,theta4,theta5]
     Returns:
+        Tse: end effector configuration
         Jarm: Jacobian of arm
         Jbase: Jacobian of chassis
         Je: Jacobian of entire robot
@@ -386,7 +341,7 @@ def Get_Jacobians(config):
     for i in range(np.shape(Je_inv)[0]):
         for j in range(np.shape(Je_inv)[1]):
             Je_inv[i][j] = round(Je_inv[i][j],5)
-    return Jarm,Jbase,Je,Je_inv
+    return Tse,Jarm,Jbase,Je,Je_inv
 
 def Pick_and_Place(Tsc_i,Tsc_f,config_a,config_r):
     '''
@@ -399,10 +354,10 @@ def Pick_and_Place(Tsc_i,Tsc_f,config_a,config_r):
         csv file containing robot configuration for Coppelia Sim
         csv file containing the 6-vector end-effector error
     '''
-    #Calculate Tse_i
-    T0e = FKinBody(M0e,Blist,config_a[3:8])
-    Tsb = np.array([[np.cos(config_a[0]),-np.sin(config_a[0]),0,config_a[1]],
-                [np.sin(config_a[0]),np.cos(config_a[0]),0,config_a[2]],
+    #Calculate Tse_i (reference end effector initial configuration)
+    T0e = FKinBody(M0e,Blist,config_r[3:8])
+    Tsb = np.array([[np.cos(config_r[0]),-np.sin(config_r[0]),0,config_r[1]],
+                [np.sin(config_r[0]),np.cos(config_r[0]),0,config_r[2]],
                 [0,0,1,0.0963],
                 [0,0,0,1]])
     Tbe = np.matmul(Tb0,T0e)
@@ -424,8 +379,32 @@ def Pick_and_Place(Tsc_i,Tsc_f,config_a,config_r):
     #Reference configurations per 0.01 seconds
     k = 2
 
-    #Generate Trajectory
+    #Generate Reference Trajectory
     traj = TrajectoryGenerator(Tse_i,Tsc_i,Tsc_f,Tce_g,Tce_s,k)
+    
+    #Loop through reference trajectory
+    for i in range(np.shape(traj)[0]-1):
+        Xd = np.array([[traj[i][0],traj[i][1],traj[i][2],traj[i][9]],
+                       [traj[i][3],traj[i][4],traj[i][5],traj[i][10]],
+                       [traj[i][6],traj[i][7],traj[i][8],traj[i][11]],
+                       [0,0,0,1]])
+        Xd_next = np.array([[traj[i+1][0],traj[i+1][1],traj[i+1][2],traj[i+1][9]],
+                            [traj[i+1][3],traj[i+1][4],traj[i+1][5],traj[i+1][10]],
+                            [traj[i+1][6],traj[i+1][7],traj[i+1][8],traj[i+1][11]],
+                            [0,0,0,1]])
+        
+        # Calculate Tse and Jacobians
+        X,Jarm,Jbase,Je,Je_inv = Get_Jacobians(config_a[:8])
+
+        # Calculate End Effector Twist
+        V = FeedbackControl(X,Xd,Xd_next,Kp,Ki,dt)
+
+        # Calculate Controls
+        controls = np.matmul(Je_inv,V)
+
+        # Calculate next configuration
+        config_a = NextState(config_a,controls,dt,dthetamax)
+        config_a[-1] = traj[i+1][-1]
 
     return
 
@@ -448,9 +427,27 @@ Tb0 = np.array([[1,0,0,0.1662],
                 [0,0,0,1]])
 F = 0.25*r*np.array([[-1/(l+w),1/(l+w),1/(l+w),-1/(l+w)],[1,1,1,1],[-1,1,-1,1]])
 F6 = np.concatenate((np.zeros((2,np.shape(F)[0]+1)),F,np.zeros((1,np.shape(F)[0]+1))))
-Ki = np.zeros((6,6))
-Kp = np.zeros((6,6))
+Ki_const = 0.2
+Ki = Ki_const*np.identity(6)
+Kp_const = 5
+Kp = Kp_const*np.identity(6)
+Xe_i = 0
+dt = 0.01
+dthetamax = 20
 
 #Cube initial and final configurations
-Tsc_i = np.array([[1,0,0,1],[0,1,0,0],[0,0,1,0.025],[0,0,0,1]])     #maybe change z
-Tsc_f = np.array([[0,1,0,0],[-1,0,0,-1],[0,0,1,0.025],[0,0,0,1]])   #maybe change z
+Tsc_i = np.array([[1,0,0,1],[0,1,0,0],[0,0,1,0.025],[0,0,0,1]])
+Tsc_f = np.array([[0,1,0,0],[-1,0,0,-1],[0,0,1,0.025],[0,0,0,1]])
+
+#Actual robot configuration
+config_a = np.array([0.6,-0.4159,0,0,0,0,3*np.pi/2,0,0,0,0,0,0])
+# config_a = np.array([0,0,0,0,0,0,0,0,0,0,0,0,0])
+
+#Reference robot configuration
+config_r = np.array([0,-0.4159,0.2,0,0,0,3*np.pi/2,0,0,0,0,0,0])
+# config_r = np.array([0,0,0,0,0,0,0,0,0,0,0,0,0])
+
+# Open csv
+f = open('final.csv','w')
+
+Pick_and_Place(Tsc_i,Tsc_f,config_a,config_r)
