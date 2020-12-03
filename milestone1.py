@@ -21,6 +21,7 @@ def NextState(thetalist,dthetalist,dt,dthetamax):
     r = 0.0475
     l = 0.47/2
     w = 0.3/2
+    
     Tsb = np.array([[np.cos(thetalist[0]),-np.sin(thetalist[0]),0,thetalist[1]],
                 [np.sin(thetalist[0]),np.cos(thetalist[0]),0,thetalist[2]],
                 [0,0,1,0.0963],
