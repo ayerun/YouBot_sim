@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from modern_robotics import *
+import logging
 
 # chassis phi, chassis x, chassis y, J1, J2, J3, J4, J5, W1, W2, W3, W4, gripper state
 
@@ -417,6 +418,9 @@ def Pick_and_Place(Tsc_i,Tsc_f,config_a,config_r):
 
     return
 
+#Create log
+logging.basicConfig(filename="run.log",level=logging.INFO,format = '%(asctime)s %(processName)s %(name)s %(message)s')
+
 # Constants
 r = 0.0475
 l = 0.47/2
@@ -461,9 +465,11 @@ f = open('final.csv','w')
 e = open('error.csv','w')
 
 # Populate csv files
+logging.info('Running program to generate .csv files for simulation and error plotting')
 Pick_and_Place(Tsc_i,Tsc_f,config_a,config_r)
 
 #Plot Error
+logging.info('Creating error plot')
 tlist = np.linspace(0,23.25,2325)
 fig1 = plt.figure()
 plt.plot(tlist,Xe_list[:,0])
@@ -474,5 +480,7 @@ plt.plot(tlist,Xe_list[:,4])
 plt.plot(tlist,Xe_list[:,5])
 plt.xlabel('Time (s)')
 plt.ylabel('X error')
+plt.legend(['Xerr[0]','Xerr[1]','Xerr[2]','Xerr[3]','Xerr[4]','Xerr[5]'])
 plt.title('YouBot Configuration Error Response')
 plt.show()
+logging.info('Program complete')
