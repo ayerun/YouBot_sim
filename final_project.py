@@ -296,12 +296,21 @@ def FeedbackControl(X,Xd,Xd_next,Kp,Ki,dt):
         V: commanded end-effector twist 
     '''
     global Xe_i #numerical integral of error from 0 to t
+    global time
 
     Xe = se3ToVec(MatrixLog6(np.matmul(TransInv(X),Xd)))
+    Xe_list[time] = Xe
     Vd = se3ToVec(MatrixLog6(np.matmul(TransInv(Xd),Xd_next))/dt)
     Ad = Adjoint(np.matmul(TransInv(X),Xd))
     Xe_i += dt*Xe
     V = np.dot(Ad,Vd)+np.dot(Kp,Xe)+np.dot(Ki,Xe_i)
+
+    # Write to csv
+    myoutput = " %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f\n" % (dt*time,Xe[0],Xe[1],Xe[2],Xe[3],Xe[4],Xe[5])
+    e.write(myoutput)
+
+    # increment timer
+    time+=1
 
     return V
 
@@ -429,10 +438,12 @@ F = 0.25*r*np.array([[-1/(l+w),1/(l+w),1/(l+w),-1/(l+w)],[1,1,1,1],[-1,1,-1,1]])
 F6 = np.concatenate((np.zeros((2,np.shape(F)[0]+1)),F,np.zeros((1,np.shape(F)[0]+1))))
 Ki_const = 0.2
 Ki = Ki_const*np.identity(6)
-Kp_const = 5
+Kp_const = 5.5
 Kp = Kp_const*np.identity(6)
 Xe_i = 0
+Xe_list = np.zeros((2325,6))
 dt = 0.01
+time = 0
 dthetamax = 20
 
 #Cube initial and final configurations
@@ -441,13 +452,27 @@ Tsc_f = np.array([[0,1,0,0],[-1,0,0,-1],[0,0,1,0.025],[0,0,0,1]])
 
 #Actual robot configuration
 config_a = np.array([0.6,-0.4159,0,0,0,0,3*np.pi/2,0,0,0,0,0,0])
-# config_a = np.array([0,0,0,0,0,0,0,0,0,0,0,0,0])
 
 #Reference robot configuration
 config_r = np.array([0,-0.4159,0.2,0,0,0,3*np.pi/2,0,0,0,0,0,0])
-# config_r = np.array([0,0,0,0,0,0,0,0,0,0,0,0,0])
 
-# Open csv
+# Open csv files
 f = open('final.csv','w')
+e = open('error.csv','w')
 
+# Populate csv files
 Pick_and_Place(Tsc_i,Tsc_f,config_a,config_r)
+
+#Plot Error
+tlist = np.linspace(0,23.25,2325)
+fig1 = plt.figure()
+plt.plot(tlist,Xe_list[:,0])
+plt.plot(tlist,Xe_list[:,1])
+plt.plot(tlist,Xe_list[:,2])
+plt.plot(tlist,Xe_list[:,3])
+plt.plot(tlist,Xe_list[:,4])
+plt.plot(tlist,Xe_list[:,5])
+plt.xlabel('Time (s)')
+plt.ylabel('X error')
+plt.title('YouBot Configuration Error Response')
+plt.show()
