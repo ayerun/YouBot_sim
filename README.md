@@ -7,6 +7,7 @@
 
 #### Usage Instructions:
 * Commented code is in the directory called code
+* Milestones contains code that I used as intermediate steps in this project
 * Results directory contains three directories (best, overshoot, and newTask)
     - best highlights a well-tuned feedforward-plus-PI controller
     - overshoot highlights a poorly-tuned feedforward-plus-PI controller
